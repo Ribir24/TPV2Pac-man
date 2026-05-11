@@ -52,7 +52,7 @@ FoodSystem::initSystem() {
             if (rand() % 10 == 0) {
                 auto m = _mngr->addComponent<Miracle>(e);
                 // datos del componente
-                m->_lastTime = SDL_GetTicks();
+                m->_lastTime = sdlutils().virtualTimer().currTime();
                 m->_N = 10000 + rand() % 10000; // de 10 a 20 segundos
             }
         }
@@ -62,7 +62,7 @@ FoodSystem::initSystem() {
 void 
 FoodSystem::update() {
     auto& food = _mngr->getEntities(ecs::grp::FOOD);
-    Uint32 now = SDL_GetTicks();
+    Uint32 now = sdlutils().virtualTimer().currTime();
 
     for (auto e : food) {
         if (_mngr->hasComponent<Miracle>(e)) {
