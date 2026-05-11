@@ -31,10 +31,13 @@ ImmunitySystem::update() {
 
 void 
 ImmunitySystem::recieve(const Message& msg) {
-    if (msg.id == _m_IMMUNITY_START) {
+    if (msg.id == _m_PACMAN_MIRACLE_FOOD_COLLISION && !_mngr->getComponent<Immunity>(_mngr->getHandler(ecs::hdlr::PACMAN))->_active) {
         _active = true;
         _startTime = sdlutils().virtualTimer().currTime();
         auto pc = _mngr->getHandler(ecs::hdlr::PACMAN);
         _mngr->getComponent<Immunity>(pc)->_active = true;
+        Message mIm;
+        mIm.id = _m_IMMUNITY_START;
+        _mngr->send(mIm);
     }
 }

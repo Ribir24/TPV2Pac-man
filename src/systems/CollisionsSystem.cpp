@@ -48,11 +48,10 @@ void CollisionsSystem::update() {
 					pTR->_pos, pTR->_width, pTR->_height,
 					eTR->_pos, eTR->_width, eTR->_height)) {
 				auto immu = _mngr->getComponent<Miracle>(e);
-				if (immu != nullptr && immu->_active &&
-					!_mngr->getComponent<Immunity>(_mngr->getHandler(ecs::hdlr::PACMAN))->_active) {
-					Message mIm;
-					mIm.id = _m_IMMUNITY_START;
-					_mngr->send(mIm);
+				if (immu != nullptr && immu->_active) {
+					Message m;
+					m.id = _m_PACMAN_MIRACLE_FOOD_COLLISION;
+					_mngr->send(m);
 				}
 				_mngr->setAlive(e, false);
 				sdlutils().soundEffects().at("pacman_eat").play();
