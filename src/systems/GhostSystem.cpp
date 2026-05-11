@@ -12,7 +12,7 @@ GhostSystem::GhostSystem() :
     _spawnTimer(0.0f),
     _spawnInterval(5000.0f),
     _maxGhost(10),
-    _lastTick(sdlutils().virtualTimer().currTime()) {
+    _lastTick(sdlutils().currRealTime()) {
 }
 
 GhostSystem::~GhostSystem() {
@@ -26,7 +26,7 @@ void
 GhostSystem::update() {
     auto& ghosts = _mngr->getEntities(ecs::grp::GHOSTS);
 
-    Uint32 now = sdlutils().virtualTimer().currTime();
+    Uint32 now = sdlutils().currRealTime();
     float dt = now - _lastTick;
     _lastTick = now;
     _spawnTimer += dt;

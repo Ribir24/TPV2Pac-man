@@ -17,7 +17,7 @@ ImmunitySystem::initSystem() {
 void 
 ImmunitySystem::update() {
     if (_active) {
-        Uint32 now = sdlutils().virtualTimer().currTime();
+        Uint32 now = sdlutils().currRealTime();
         if (now - _startTime >= 10000) {
             _active = false;
             Message msg;
@@ -33,7 +33,7 @@ void
 ImmunitySystem::recieve(const Message& msg) {
     if (msg.id == _m_IMMUNITY_START) {
         _active = true;
-        _startTime = sdlutils().virtualTimer().currTime();
+        _startTime = sdlutils().currRealTime();
         auto pc = _mngr->getHandler(ecs::hdlr::PACMAN);
         _mngr->getComponent<Immunity>(pc)->_active = true;
     }
