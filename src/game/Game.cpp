@@ -46,22 +46,8 @@ Game::~Game() {
 
 bool Game::init() {
 
-	// initialize the SDL singleton
-	if (!SDLUtils::Init("PacMan, Stars, ...", 800, 600,
-		"resources/config/resources.json")) {
-
-		std::cerr << "Something went wrong while initializing SDLUtils"
-			<< std::endl;
-		return false;
-	}
-
-	// initialize the InputHandler singleton
-	if (!InputHandler::Init()) {
-		std::cerr << "Something went wrong while initializing SDLHandler"
-			<< std::endl;
-		return false;
-
-	}
+	// initialize the SDL singleton & InputHandler singleton
+	if (!initSglSdl()) return false;
 
 	// Create the manager
 	_mngr = new EntityManager();
