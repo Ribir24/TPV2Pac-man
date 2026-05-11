@@ -8,10 +8,12 @@ PausedState::PausedState(){
 
 void
 PausedState::enter() {
+    sdlutils().virtualTimer().pause();
 }
 
 void
 PausedState::leave() {
+    sdlutils().virtualTimer().resume();
 }
 
 void

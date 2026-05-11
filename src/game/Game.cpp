@@ -100,6 +100,7 @@ void Game::start() {
 	auto &ihdlr = ih();
 
 	while (!exit) {
+		//Uint32 startTime = sdlutils().virtualTimer().currTime();
 		Uint32 startTime = sdlutils().currRealTime();
 
 		// refresh the input handler
@@ -114,6 +115,7 @@ void Game::start() {
 		sdlutils().presentRenderer();
 
 		Uint32 frameTime = sdlutils().currRealTime() - startTime;
+		//Uint32 frameTime = sdlutils().virtualTimer().currTime() - startTime;
 
 		if (frameTime < 10)
 			SDL_Delay(10 - frameTime);
