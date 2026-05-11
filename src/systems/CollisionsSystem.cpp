@@ -54,10 +54,10 @@ void CollisionsSystem::update() {
 					mIm.id = _m_IMMUNITY_START;
 					_mngr->send(mIm);
 				}
+				_mngr->setAlive(e, false);
 				sdlutils().soundEffects().at("pacman_eat").play();
 				Message m;
 				m.id = _m_PACMAN_FOOD_COLLISION;
-				_mngr->setAlive(e, false);
 				_mngr->send(m);
 			}
 		}

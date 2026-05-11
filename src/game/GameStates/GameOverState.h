@@ -10,7 +10,10 @@ public:
     GameOverState() {};
     ~GameOverState() {};
 
-    void enter() {} ;
+    void enter();
     void leave() {};
     void update() override;
+
+private:
+    bool won;
 };
