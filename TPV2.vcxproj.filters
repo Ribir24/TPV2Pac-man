@@ -242,5 +242,8 @@
     <ClInclude Include="src\components\Health.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\components\Mortal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

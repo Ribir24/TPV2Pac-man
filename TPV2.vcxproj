@@ -63,6 +63,7 @@
     <ClInclude Include="src\game\Game.h" />
     <ClInclude Include="src\game\GameStates\GameOverState.h" />
     <ClInclude Include="src\game\GameStates\GameState.h" />
+    <ClInclude Include="src\components\Mortal.h" />
     <ClInclude Include="src\game\GameStates\NewGameState.h" />
     <ClInclude Include="src\game\GameStates\NewRoundState.h" />
     <ClInclude Include="src\game\GameStates\PausedState.h" />

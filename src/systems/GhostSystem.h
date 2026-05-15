@@ -20,5 +20,10 @@ private:
 	int _maxGhost;
 	float _spawnTimer, _spawnInterval;
 
+	//Mortal component
+	int MinT, MaxT;
+	int mortProb, _V;
+
+
 	Uint32 _lastTick;
 };

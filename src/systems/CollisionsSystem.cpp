@@ -6,6 +6,7 @@
 #include "../components/Miracle.h"
 #include "../components/Immunity.h"
 #include "../components/Health.h"
+#include "../components/Mortal.h"
 #include "../ecs/EntityManager.h"
 #include "../utils/Collisions.h"
 #include "../sdlutils/SDLUtils.h"
@@ -82,8 +83,15 @@ void CollisionsSystem::update() {
 
 				bool imm = immComp->_active;
 				if (imm) {
-					_mngr->setAlive(e, false);
-					sdlutils().soundEffects().at("pacman_chomp").play();
+					auto mort = _mngr->getComponent<Mortal>(e);
+					if (mort != nullptr) {
+						mort->_T -= (mort->_T * mort->_V) / 100.0f;
+						eTR->_pos = mort->_pos;
+					}
+					else {
+						_mngr->setAlive(e, false);
+						sdlutils().soundEffects().at("pacman_chomp").play();
+					}
 				}
 				else{
 					Message m;

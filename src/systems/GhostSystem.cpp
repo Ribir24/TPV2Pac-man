@@ -4,6 +4,7 @@
 #include "../components/Transform.h"
 #include "../components/FramedImage.h"
 #include "../components/Immunity.h"
+#include "../components/Mortal.h"
 #include "../sdlutils/SDLUtils.h"
 #include "../utils/Vector2D.h"
 
@@ -12,7 +13,12 @@ GhostSystem::GhostSystem() :
     _spawnTimer(0.0f),
     _spawnInterval(5000.0f),
     _maxGhost(10),
-    _lastTick(sdlutils().virtualTimer().currTime()) {
+    _lastTick(sdlutils().virtualTimer().currTime()),
+    MinT(10000),
+    MaxT(20000),
+    mortProb(80),
+    _V(90)
+{
 }
 
 GhostSystem::~GhostSystem() {
@@ -54,6 +60,14 @@ GhostSystem::update() {
 
             if (posF->_pos.getX() < 0 || posF->_pos.getX() + posF->_width > sdlutils().width())   posF->_vel.setX(-posF->_vel.getX());
             if (posF->_pos.getY() < 0 || posF->_pos.getY() + posF->_height > sdlutils().height()) posF->_vel.setY(-posF->_vel.getY());
+
+            auto mort = _mngr->getComponent<Mortal>(e);
+            if (mort != nullptr) {
+                mort->_T -= dt;
+                if (mort->_T <= 0) {
+                    _mngr->setAlive(e, false);
+                }
+            }
         }
     }
 }
@@ -88,6 +102,16 @@ GhostSystem::spawnGhost() {
     fi->_iCurrentFrame = 0;
     fi->_iAnimSpeed = 100;
     fi->_fLastFrameUpdate = 0;
+
+    if (rand() % 100 < mortProb) {
+        auto mort = _mngr->addComponent<Mortal>(e);
+        mort->_T = MinT + rand() % (MaxT - MinT + 1);
+        mort->_V = _V;
+        if      (corner == 0) mort->_pos = Vector2D(0, 0); // top izq
+        else if (corner == 1) mort->_pos = Vector2D(sdlutils().width() - size, 0); // top der
+        else if (corner == 2) mort->_pos = Vector2D(0, sdlutils().height() - size); // bottom izq
+        else                  mort->_pos = Vector2D(sdlutils().width() - size, sdlutils().height() - size); //bottom der
+    }
 }
 
 void GhostSystem::recieve(const Message& msg) {
