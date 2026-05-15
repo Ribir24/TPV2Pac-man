@@ -34,7 +34,8 @@ void CollisionsSystem::update() {
 	// particular case we could use a for-each loop since the list stars is not
 	// modified.
 	//
-	
+	auto& helpers = _mngr->getEntities(ecs::grp::HELPERS);
+
 	auto &food = _mngr->getEntities(ecs::grp::FOOD);
 	auto n = food.size();
 	for (auto i = 0u; i < n; i++) {
@@ -98,6 +99,37 @@ void CollisionsSystem::update() {
 					m.id = _m_PACMAN_GHOST_COLLISION;
 					_mngr->send(m);
 					sdlutils().soundEffects().at("pacman_death").play();
+				}
+			}
+		}
+	}
+
+	for (auto h : helpers) {
+		if (_mngr->isAlive(h)) {
+			auto hTR = _mngr->getComponent<Transform>(h);
+
+			//si toca al pacman se muere
+			if (Collisions::collides(
+				pTR->_pos, pTR->_width, pTR->_height,
+				hTR->_pos, hTR->_width, hTR->_height)) {
+
+				auto pc = _mngr->getHandler(ecs::hdlr::PACMAN);
+
+
+				Message m;
+				m.id = _m_PACMAN_GHOST_COLLISION;
+				_mngr->send(m);
+				sdlutils().soundEffects().at("pacman_death").play();
+			}
+
+			for (auto g : ghosts) {
+				auto gTR = _mngr->getComponent<Transform>(g);
+				if (Collisions::collides(
+					gTR->_pos, gTR->_width, gTR->_height,
+					hTR->_pos, hTR->_width, hTR->_height)) {
+
+					_mngr->setAlive(g, false);
+					_mngr->setAlive(h, false);
 				}
 			}
 		}

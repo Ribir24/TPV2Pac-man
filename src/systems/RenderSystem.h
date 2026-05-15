@@ -18,6 +18,7 @@ private:
 	void drawGhosts();
 	void drawPacMan();
 	void drawFood();
+	void drawHelpers();
 	void drawHearts();
 	void draw(Transform *tr, const Texture *tex);
 	void drawFrame(Transform* tr, FramedImage* tex);

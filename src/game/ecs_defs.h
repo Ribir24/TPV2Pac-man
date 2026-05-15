@@ -25,7 +25,8 @@ struct Mortal;
 //
 #define _GRPS_LIST_ \
 	GHOSTS, \
-    FOOD
+    FOOD, \
+    HELPERS
 
 // Handlers list - must have at least one element
 //
@@ -40,6 +41,7 @@ class CollisionsSystem;
 class GhostSystem;
 class FoodSystem;
 class ImmunitySystem;
+class HelperSystem;
 
 #define _SYS_LIST_ \
 	RenderSystem, \
@@ -47,4 +49,5 @@ class ImmunitySystem;
 	CollisionsSystem, \
     GhostSystem, \
     FoodSystem, \
-    ImmunitySystem
+    ImmunitySystem, \
+    HelperSystem

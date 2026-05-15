@@ -26,6 +26,7 @@ void RenderSystem::update() {
 	drawGhosts();
 	drawPacMan();
 	drawHearts();
+	drawHelpers();
 }
 
 void RenderSystem::drawGhosts() {
@@ -65,6 +66,15 @@ void RenderSystem::drawHearts() {
 void
 RenderSystem::drawFood() {
 	for (auto e : _mngr->getEntities(ecs::grp::FOOD)) {
+		auto tr = _mngr->getComponent<Transform>(e);
+		auto tex = _mngr->getComponent<FramedImage>(e);
+		drawFrame(tr, tex);
+	}
+}
+
+void
+RenderSystem::drawHelpers() {
+	for (auto e : _mngr->getEntities(ecs::grp::HELPERS)) {
 		auto tr = _mngr->getComponent<Transform>(e);
 		auto tex = _mngr->getComponent<FramedImage>(e);
 		drawFrame(tr, tex);

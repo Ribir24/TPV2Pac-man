@@ -26,6 +26,7 @@
     <ClCompile Include="src\game\GameStates\NewRoundState.cpp" />
     <ClCompile Include="src\game\GameStates\PausedState.cpp" />
     <ClCompile Include="src\game\GameStates\RunningState.cpp" />
+    <ClCompile Include="src\systems\HelperSystem.cpp" />
     <ClCompile Include="src\json\JSON.cpp" />
     <ClCompile Include="src\json\JSONValue.cpp" />
     <ClCompile Include="src\json\json_demo.cpp" />
@@ -68,6 +69,7 @@
     <ClInclude Include="src\game\GameStates\NewRoundState.h" />
     <ClInclude Include="src\game\GameStates\PausedState.h" />
     <ClInclude Include="src\game\GameStates\RunningState.h" />
+    <ClInclude Include="src\systems\HelperSystem.h" />
     <ClInclude Include="src\game\messages_defs.h" />
     <ClInclude Include="src\json\JSON.h" />
     <ClInclude Include="src\json\JSONValue.h" />
