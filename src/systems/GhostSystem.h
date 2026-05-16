@@ -21,4 +21,6 @@ private:
 	float _spawnTimer, _spawnInterval;
 
 	Uint32 _lastTick;
+
+	bool _inm;
 };

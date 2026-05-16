@@ -4,6 +4,7 @@
 #include "../components/Transform.h"
 #include "../components/FramedImage.h"
 #include "../components/Immunity.h"
+#include "../components/Resistant.h"
 #include "../sdlutils/SDLUtils.h"
 #include "../utils/Vector2D.h"
 
@@ -12,7 +13,8 @@ GhostSystem::GhostSystem() :
     _spawnTimer(0.0f),
     _spawnInterval(5000.0f),
     _maxGhost(10),
-    _lastTick(sdlutils().virtualTimer().currTime()) {
+    _lastTick(sdlutils().virtualTimer().currTime()),
+    _inm(false){
 }
 
 GhostSystem::~GhostSystem() {
@@ -54,6 +56,15 @@ GhostSystem::update() {
 
             if (posF->_pos.getX() < 0 || posF->_pos.getX() + posF->_width > sdlutils().width())   posF->_vel.setX(-posF->_vel.getX());
             if (posF->_pos.getY() < 0 || posF->_pos.getY() + posF->_height > sdlutils().height()) posF->_vel.setY(-posF->_vel.getY());
+
+            if (_mngr ->hasComponent<Resistant>(e)) {
+                auto rest = _mngr->getComponent<Resistant>(e);
+                rest->_T -= dt;
+                if (rest->_T <= 0 && !_inm) {
+                    auto fi = _mngr->getComponent<FramedImage>(e);
+                    fi->_animationFrames = { 32, 33, 34, 35, 36, 37, 38, 39 };
+                }
+            }
         }
     }
 }
@@ -75,6 +86,11 @@ GhostSystem::spawnGhost() {
 
     ghostTr->init(pos, Vector2D(1.0f, 1.0f), size, size, 0.0f);
 
+    if (rand() % 100 < 50) {
+        auto rest = _mngr->addComponent<Resistant>(e);
+        rest->_T = 1000 + rand() % 9001;
+    }
+
     //SPRITESHEET
     auto fi = _mngr->addComponent<FramedImage>(e, &sdlutils().images().at("sprites"));
 
@@ -84,16 +100,20 @@ GhostSystem::spawnGhost() {
     fi->_fFrameHeight = sdlutils().images().at("sprites").height() / 8;
 
     //ANIMACION
-    fi->_animationFrames = { 32, 33, 34, 35, 36, 37, 38, 39 };
+    if (!_mngr->hasComponent<Resistant>(e)) fi->_animationFrames = { 32, 33, 34, 35, 36, 37, 38, 39 };
+    else                                    fi->_animationFrames = { 40, 41, 42, 43, 44, 45, 46, 47 };
     fi->_iCurrentFrame = 0;
     fi->_iAnimSpeed = 100;
     fi->_fLastFrameUpdate = 0;
+
+
 }
 
 void GhostSystem::recieve(const Message& msg) {
     auto& ghosts = _mngr->getEntities(ecs::grp::GHOSTS);
 
     if (msg.id == _m_IMMUNITY_START) {
+        _inm = true;
         for (auto e : ghosts) {
             if (_mngr->isAlive(e) && _mngr->hasComponent<FramedImage>(e)) {
                 auto img = _mngr->getComponent<FramedImage>(e);
@@ -103,10 +123,12 @@ void GhostSystem::recieve(const Message& msg) {
         }
     }
     else if (msg.id == _m_IMMUNITY_END) {
+        _inm = false;
         for (auto e : ghosts) {
             if (_mngr->isAlive(e) && _mngr->hasComponent<FramedImage>(e)) {
                 auto img = _mngr->getComponent<FramedImage>(e);
-                img->_animationFrames = { 32, 33, 34, 35, 36, 37, 38, 39 };
+                if (_mngr->hasComponent<Resistant>(e) && _mngr->getComponent<Resistant>(e)->_T > 0) img->_animationFrames = { 40, 41, 42, 43, 44, 45, 46, 47 };
+                else                                                                                img->_animationFrames = { 32, 33, 34, 35, 36, 37, 38, 39 };
                 img->_iCurrentFrame = 0;
             }
         }

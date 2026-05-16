@@ -6,6 +6,7 @@
 #include "../components/Miracle.h"
 #include "../components/Immunity.h"
 #include "../components/Health.h"
+#include "../components/Resistant.h"
 #include "../ecs/EntityManager.h"
 #include "../utils/Collisions.h"
 #include "../sdlutils/SDLUtils.h"
@@ -82,8 +83,26 @@ void CollisionsSystem::update() {
 
 				bool imm = immComp->_active;
 				if (imm) {
-					_mngr->setAlive(e, false);
-					sdlutils().soundEffects().at("pacman_chomp").play();
+					if (_mngr->hasComponent<Resistant>(e) && _mngr->getComponent<Resistant>(e)->_T > 0) {
+						Vector2D newPos;
+						bool valid = false;
+
+						while (!valid) {
+							float x = rand() % sdlutils().width();
+							float y = rand() % sdlutils().height();
+
+							newPos = Vector2D(x, y);
+
+							float dist = (pTR->_pos - newPos).magnitude();
+
+							if (dist <= 100.0) valid = true;
+						}
+						eTR->_pos = newPos;
+					}
+					else {
+						_mngr->setAlive(e, false);
+						sdlutils().soundEffects().at("pacman_chomp").play();
+					}
 				}
 				else{
 					Message m;
