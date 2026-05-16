@@ -10,6 +10,7 @@ struct FramedImage;
 struct Miracle;
 struct Immunity;
 struct Health;
+struct Weak;
 
 #define _CMPS_LIST_ \
 	Transform, \
@@ -17,7 +18,8 @@ struct Health;
     FramedImage, \
     Miracle, \
     Immunity, \
-    Health
+    Health, \
+    Weak
 
 // Groups list - must have at least one element
 //

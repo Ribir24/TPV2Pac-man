@@ -4,9 +4,9 @@
 #include "../components/Transform.h"
 #include "../components/FramedImage.h"
 #include "../components/Immunity.h"
+#include "../components/Weak.h"
 #include "../sdlutils/SDLUtils.h"
 #include "../utils/Vector2D.h"
-
 
 GhostSystem::GhostSystem() :
     _spawnTimer(0.0f),
@@ -75,6 +75,15 @@ GhostSystem::spawnGhost() {
 
     ghostTr->init(pos, Vector2D(1.0f, 1.0f), size, size, 0.0f);
 
+    if (rand() % 101 < 50) {
+        auto wCmp = _mngr->addComponent<Weak>(e);
+        wCmp->_N = (1 + rand() % 5);
+
+        if      (corner == 0) wCmp->_iniPos =  Vector2D(0, 0); // top izq
+        else if (corner == 1) wCmp->_iniPos = Vector2D(sdlutils().width() - size, 0); // top der
+        else if (corner == 2) wCmp->_iniPos = Vector2D(0, sdlutils().height() - size); // bottom izq
+        else                  wCmp->_iniPos = Vector2D(sdlutils().width() - size, sdlutils().height() - size); //bottom der
+    }
     //SPRITESHEET
     auto fi = _mngr->addComponent<FramedImage>(e, &sdlutils().images().at("sprites"));
 
@@ -84,7 +93,8 @@ GhostSystem::spawnGhost() {
     fi->_fFrameHeight = sdlutils().images().at("sprites").height() / 8;
 
     //ANIMACION
-    fi->_animationFrames = { 32, 33, 34, 35, 36, 37, 38, 39 };
+    if (_mngr->getComponent<Weak>(e) != nullptr) fi->_animationFrames = { 40, 41, 42, 43, 44, 45, 46, 47 }; //verde
+    else                                         fi->_animationFrames = { 32, 33, 34, 35, 36, 37, 38, 39 }; //rojo
     fi->_iCurrentFrame = 0;
     fi->_iAnimSpeed = 100;
     fi->_fLastFrameUpdate = 0;
@@ -106,7 +116,9 @@ void GhostSystem::recieve(const Message& msg) {
         for (auto e : ghosts) {
             if (_mngr->isAlive(e) && _mngr->hasComponent<FramedImage>(e)) {
                 auto img = _mngr->getComponent<FramedImage>(e);
-                img->_animationFrames = { 32, 33, 34, 35, 36, 37, 38, 39 };
+                auto wCmp = _mngr->getComponent<Weak>(e);
+                if (wCmp != nullptr && wCmp->_N > 0) img->_animationFrames = { 40, 41, 42, 43, 44, 45, 46, 47 };
+                else                                 img->_animationFrames = { 32, 33, 34, 35, 36, 37, 38, 39 };
                 img->_iCurrentFrame = 0;
             }
         }

@@ -6,6 +6,8 @@
 #include "../components/Miracle.h"
 #include "../components/Immunity.h"
 #include "../components/Health.h"
+#include "../components/Weak.h"
+#include "../components/FramedImage.h"
 #include "../ecs/EntityManager.h"
 #include "../utils/Collisions.h"
 #include "../sdlutils/SDLUtils.h"
@@ -86,10 +88,20 @@ void CollisionsSystem::update() {
 					sdlutils().soundEffects().at("pacman_chomp").play();
 				}
 				else{
-					Message m;
-					m.id = _m_PACMAN_GHOST_COLLISION;
-					_mngr->send(m);
-					sdlutils().soundEffects().at("pacman_death").play();
+					auto wCmp = _mngr->getComponent<Weak>(e);
+					if (wCmp != nullptr && wCmp->_N > 0) {
+						wCmp->_N--;
+						eTR->_pos = wCmp->_iniPos;
+						auto img = _mngr->getComponent<FramedImage>(e);
+						if (wCmp->_N > 0) img->_animationFrames = { 40, 41, 42, 43, 44, 45, 46, 47 };
+						else              img->_animationFrames = { 32, 33, 34, 35, 36, 37, 38, 39 };
+					}
+					else {
+						Message m;
+						m.id = _m_PACMAN_GHOST_COLLISION;
+						_mngr->send(m);
+						sdlutils().soundEffects().at("pacman_death").play();
+					}
 				}
 			}
 		}
