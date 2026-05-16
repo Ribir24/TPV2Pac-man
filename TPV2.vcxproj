@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\systems\RiskSystem.cpp" />
     <ClCompile Include="src\ecs\EntityManager.cpp" />
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="src\game\GameStates\GameOverState.cpp" />
@@ -51,6 +52,8 @@
     <ClInclude Include="src\components\Immunity.h" />
     <ClInclude Include="src\components\Miracle.h" />
     <ClInclude Include="src\components\Transform.h" />
+    <ClInclude Include="src\components\Stoppable.h" />
+    <ClInclude Include="src\systems\RiskSystem.h" />
     <ClInclude Include="src\ecs\Component.h" />
     <ClInclude Include="src\ecs\ecs.h" />
     <ClInclude Include="src\ecs\ecs_defs_example.h" />

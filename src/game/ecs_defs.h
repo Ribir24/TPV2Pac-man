@@ -11,6 +11,7 @@ struct Miracle;
 struct Immunity;
 struct Health;
 struct Weak;
+struct Stoppable;
 
 #define _CMPS_LIST_ \
 	Transform, \
@@ -19,7 +20,8 @@ struct Weak;
     Miracle, \
     Immunity, \
     Health, \
-    Weak
+    Weak, \
+    Stoppable
 
 // Groups list - must have at least one element
 //
@@ -40,6 +42,7 @@ class CollisionsSystem;
 class GhostSystem;
 class FoodSystem;
 class ImmunitySystem;
+class RiskSystem;
 
 #define _SYS_LIST_ \
 	RenderSystem, \
@@ -47,4 +50,5 @@ class ImmunitySystem;
 	CollisionsSystem, \
     GhostSystem, \
     FoodSystem, \
-    ImmunitySystem
+    ImmunitySystem, \
+    RiskSystem
