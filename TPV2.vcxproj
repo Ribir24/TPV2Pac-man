@@ -41,10 +41,12 @@
     <ClCompile Include="src\systems\ImmunitySystem.cpp" />
     <ClCompile Include="src\systems\PacManSystem.cpp" />
     <ClCompile Include="src\systems\RenderSystem.cpp" />
+    <ClCompile Include="src\systems\ShieldSystem.cpp" />
     <ClCompile Include="src\utils\Collisions.cpp" />
     <ClCompile Include="src\utils\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\components\Clonable.h" />
     <ClInclude Include="src\components\FramedImage.h" />
     <ClInclude Include="src\components\Health.h" />
     <ClInclude Include="src\components\Image.h" />
@@ -88,6 +90,7 @@
     <ClInclude Include="src\systems\ImmunitySystem.h" />
     <ClInclude Include="src\systems\PacManSystem.h" />
     <ClInclude Include="src\systems\RenderSystem.h" />
+    <ClInclude Include="src\systems\ShieldSystem.h" />
     <ClInclude Include="src\utils\Collisions.h" />
     <ClInclude Include="src\utils\DynamicBitSet.h" />
     <ClInclude Include="src\utils\exceptions.h" />

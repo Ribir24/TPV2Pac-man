@@ -37,6 +37,7 @@ private:
 	ecs::System* _ghostSys;
 	ecs::System* _foodSys;
 	ecs::System* _immSys;
+	ecs::System* _shiSys;
 
 	GameState* _state;
 	GameState* _paused_state;

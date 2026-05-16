@@ -4,6 +4,7 @@
 #include "../components/Transform.h"
 #include "../components/FramedImage.h"
 #include "../components/Immunity.h"
+#include "../components/Clonable.h"
 #include "../sdlutils/SDLUtils.h"
 #include "../utils/Vector2D.h"
 
@@ -54,10 +55,41 @@ GhostSystem::update() {
 
             if (posF->_pos.getX() < 0 || posF->_pos.getX() + posF->_width > sdlutils().width())   posF->_vel.setX(-posF->_vel.getX());
             if (posF->_pos.getY() < 0 || posF->_pos.getY() + posF->_height > sdlutils().height()) posF->_vel.setY(-posF->_vel.getY());
+
+            auto cl = _mngr->getComponent<Clonable>(e);
+            if (cl != nullptr && cl->_N > 0) {
+                cl->_M -= dt;
+                if (cl->_M <= 0) {
+                    std::cout << "CLONANDO ASMA FANT" << std::endl;
+                    cl->_N--;
+                    cl->_M = Mi + rand() % Md;
+
+                    auto e = _mngr->addEntity(ecs::grp::GHOSTS);
+                    auto ghostTr = _mngr->addComponent<Transform>(e);
+                    float size = 40.0f;
+
+                    Vector2D pos = Vector2D(posF->_pos.getX(), posF->_pos.getY());
+
+                    ghostTr->init(pos, Vector2D(1.0f, 1.0f), size, size, 0.0f);
+
+                    //SPRITESHEET
+                    auto fi = _mngr->addComponent<FramedImage>(e, &sdlutils().images().at("sprites"));
+
+                    fi->_iCols = 8;
+                    fi->iRows = 8;
+                    fi->_fFrameWidth = sdlutils().images().at("sprites").width() / 8;
+                    fi->_fFrameHeight = sdlutils().images().at("sprites").height() / 8;
+
+                    //ANIMACION
+                    fi->_animationFrames = { 32, 33, 34, 35, 36, 37, 38, 39 };
+                    fi->_iCurrentFrame = 0;
+                    fi->_iAnimSpeed = 100;
+                    fi->_fLastFrameUpdate = 0;
+                }
+            }
         }
     }
 }
-
 
 void 
 GhostSystem::spawnGhost() {
@@ -88,7 +120,15 @@ GhostSystem::spawnGhost() {
     fi->_iCurrentFrame = 0;
     fi->_iAnimSpeed = 100;
     fi->_fLastFrameUpdate = 0;
+
+    if (rand() % 100 > P){
+        auto cl = _mngr->addComponent<Clonable>(e);
+        cl->_N = Ni + rand() % Nd;
+        cl->_M = Mi + rand() % Md;
+        std::cout << "FANTASMA CLONABLE " << cl->_N << std::endl;
+    }
 }
+
 
 void GhostSystem::recieve(const Message& msg) {
     auto& ghosts = _mngr->getEntities(ecs::grp::GHOSTS);

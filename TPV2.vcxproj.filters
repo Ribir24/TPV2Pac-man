@@ -87,6 +87,9 @@
     <ClCompile Include="src\game\GameStates\RunningState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\systems\ShieldSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\json\JSON.h">
@@ -240,6 +243,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\components\Health.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\systems\ShieldSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\components\Clonable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -10,6 +10,7 @@ struct FramedImage;
 struct Miracle;
 struct Immunity;
 struct Health;
+struct Clonable;
 
 #define _CMPS_LIST_ \
 	Transform, \
@@ -17,13 +18,15 @@ struct Health;
     FramedImage, \
     Miracle, \
     Immunity, \
-    Health
+    Health, \
+    Clonable
 
 // Groups list - must have at least one element
 //
 #define _GRPS_LIST_ \
 	GHOSTS, \
-    FOOD
+    FOOD, \
+    STARS
 
 // Handlers list - must have at least one element
 //
@@ -38,6 +41,7 @@ class CollisionsSystem;
 class GhostSystem;
 class FoodSystem;
 class ImmunitySystem;
+class ShieldSystem;
 
 #define _SYS_LIST_ \
 	RenderSystem, \
@@ -45,4 +49,5 @@ class ImmunitySystem;
 	CollisionsSystem, \
     GhostSystem, \
     FoodSystem, \
-    ImmunitySystem
+    ImmunitySystem, \
+    ShieldSystem

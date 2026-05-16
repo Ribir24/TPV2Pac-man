@@ -44,7 +44,7 @@ void CollisionsSystem::update() {
 			auto eTR = _mngr->getComponent<Transform>(e);
 
 			// check if PacMan collides with the food (i.e., eat it)
-			if (Collisions::collides(
+			if (Collisions::collides( 
 					pTR->_pos, pTR->_width, pTR->_height,
 					eTR->_pos, eTR->_width, eTR->_height)) {
 				auto immu = _mngr->getComponent<Miracle>(e);

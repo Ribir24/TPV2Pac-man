@@ -20,5 +20,9 @@ private:
 	int _maxGhost;
 	float _spawnTimer, _spawnInterval;
 
+	const int Ni = 1; const int Nd = 5;
+	const int Mi = 1000; const int Md = 10000;
+	const float P = 10; 
+
 	Uint32 _lastTick;
 };
