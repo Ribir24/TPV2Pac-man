@@ -3,8 +3,8 @@
 #include "CollisionsSystem.h"
 
 #include "../components/Transform.h"
-#include "../components/Miracle.h"
 #include "../components/Immunity.h"
+#include "../components/Forbiden.h"
 #include "../components/Health.h"
 #include "../ecs/EntityManager.h"
 #include "../utils/Collisions.h"
@@ -47,11 +47,13 @@ void CollisionsSystem::update() {
 			if (Collisions::collides(
 					pTR->_pos, pTR->_width, pTR->_height,
 					eTR->_pos, eTR->_width, eTR->_height)) {
-				auto immu = _mngr->getComponent<Miracle>(e);
-				if (immu != nullptr && immu->_active) {
+				auto forb = _mngr->getComponent<Forbiden>(e);
+
+				if (forb != nullptr && forb->_active) {
 					Message m;
-					m.id = _m_PACMAN_MIRACLE_FOOD_COLLISION;
+					m.id = _m_PACMAN_GHOST_COLLISION;
 					_mngr->send(m);
+					sdlutils().soundEffects().at("pacman_death").play();
 				}
 				_mngr->setAlive(e, false);
 				sdlutils().soundEffects().at("pacman_eat").play();

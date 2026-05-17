@@ -5,7 +5,7 @@
 #include "../ecs/EntityManager.h"
 #include "../components/Transform.h"
 #include "../components/FramedImage.h"
-#include "../components/Miracle.h"
+#include "../components/Forbiden.h"
 #include "../sdlutils/SDLUtils.h"
 #include "../utils/Vector2D.h"
 
@@ -49,11 +49,20 @@ FoodSystem::initSystem() {
             fi->_fLastFrameUpdate = 0;
 
             //FRUTA MILAGROSA
-            if (rand() % 10 == 0) {
-                auto m = _mngr->addComponent<Miracle>(e);
+            //if (rand() % 10 == 0) {
+            //    auto m = _mngr->addComponent<Miracle>(e);
+            //    // datos del componente
+            //    m->_lastTime = sdlutils().virtualTimer().currTime();
+            //    m->_N = 10000 + rand() % 10000; // de 10 a 20 segundos
+            //}
+
+            //FRUTA PROHIBIDA
+            if (rand() % 5 == 0) {
+                auto m = _mngr->addComponent<Forbiden>(e);
                 // datos del componente
                 m->_lastTime = sdlutils().virtualTimer().currTime();
                 m->_N = 10000 + rand() % 10000; // de 10 a 20 segundos
+                std::cout << "Spawn prohibida" << std::endl;
             }
         }
     }
@@ -65,25 +74,36 @@ FoodSystem::update() {
     Uint32 now = sdlutils().virtualTimer().currTime();
 
     for (auto e : food) {
-        if (_mngr->hasComponent<Miracle>(e)) {
-            auto mir = _mngr->getComponent<Miracle>(e);
+        if (_mngr->hasComponent<Forbiden>(e)) {
+            auto forb = _mngr->getComponent<Forbiden>(e);
             auto img = _mngr->getComponent<FramedImage>(e);
             
-            assert(mir && img);
+            assert(forb && img);
 
-            Uint32 elapsed = now - mir->_lastTime; // tiempo desde que empezó el estado actual
+            Uint32 elapsed = now - forb->_lastTime; // tiempo desde que empezó el estado actual
 
-            if (!mir->_active && elapsed >= mir->_N) {
-                // PASAR A MILAGROSO
-                mir->_active = true;
-                mir->_lastTime = now;           // reinicia el contador para el estado milagroso
-                mir->_M = 1000 + rand() % 4000; // 1–5 s
-                img->_animationFrames = { 15 };
+            if (!forb->_active && elapsed >= forb->_N) {
+                auto pmTR = _mngr->getComponent<Transform>(_mngr->getHandler(ecs::hdlr::PACMAN));
+                auto fTR = _mngr->getComponent<Transform>(e);
+                if ((pmTR->_pos - fTR->_pos).magnitude() > 100.0f) {
+                    // PASAR A PROHIBIDO
+                    forb->_active = true;
+                    forb->_lastTime = now;           // reinicia el contador para el estado milagroso
+                    forb->_M = 1000 + rand() % 4000; // 1–5 s
+                    img->_animationFrames = { 15 };
+                    std::cout << "SE VOLVIO PROHIBIDA" << std::endl;
+                }
+                else {
+                    // QUEDARSE NORMAL
+                    std::cout << "Me quedo normal" << std::endl;
+                    forb->_lastTime = now;  // reinicia el contador para el estado normal
+                }
             }
-            else if (mir->_active && elapsed >= mir->_M) {
+            else if (forb->_active && elapsed >= forb->_M) {
                 // VOLVER A NORMAL
-                mir->_active = false;
-                mir->_lastTime = now;           // reinicia el contador para el estado normal
+                std::cout << "De vuelta a la normalidad" << std::endl;
+                forb->_active = false;
+                forb->_lastTime = now;           // reinicia el contador para el estado normal
                 img->_animationFrames = { 12 };
             }
         }

@@ -49,7 +49,7 @@
     <ClInclude Include="src\components\Health.h" />
     <ClInclude Include="src\components\Image.h" />
     <ClInclude Include="src\components\Immunity.h" />
-    <ClInclude Include="src\components\Miracle.h" />
+    <ClInclude Include="src\components\Forbiden.h" />
     <ClInclude Include="src\components\Transform.h" />
     <ClInclude Include="src\ecs\Component.h" />
     <ClInclude Include="src\ecs\ecs.h" />
@@ -68,6 +68,7 @@
     <ClInclude Include="src\game\GameStates\PausedState.h" />
     <ClInclude Include="src\game\GameStates\RunningState.h" />
     <ClInclude Include="src\game\messages_defs.h" />
+    <ClInclude Include="src\components\Miracle.h" />
     <ClInclude Include="src\json\JSON.h" />
     <ClInclude Include="src\json\JSONValue.h" />
     <ClInclude Include="src\json\json_demo.h" />
