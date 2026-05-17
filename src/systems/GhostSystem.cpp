@@ -4,6 +4,7 @@
 #include "../components/Transform.h"
 #include "../components/FramedImage.h"
 #include "../components/Immunity.h"
+#include "../components/Stopable.h"
 #include "../sdlutils/SDLUtils.h"
 #include "../utils/Vector2D.h"
 
@@ -43,7 +44,7 @@ GhostSystem::update() {
     auto posPM = _mngr->getComponent<Transform>(_mngr->getHandler(ecs::hdlr::PACMAN))->_pos;
 
     for (auto e : ghosts) {
-        if (_mngr->isAlive(e)) {
+        if (_mngr->isAlive(e) && !_mngr->getComponent<Stopable>(e)->_stoped) {
             auto posF = _mngr->getComponent<Transform>(e);
 
             if ((rand() % 200) == 0) { // 0.005 probabilidad
@@ -88,6 +89,9 @@ GhostSystem::spawnGhost() {
     fi->_iCurrentFrame = 0;
     fi->_iAnimSpeed = 100;
     fi->_fLastFrameUpdate = 0;
+
+    auto st = _mngr->addComponent<Stopable>(e);
+    st->_stoped = false;
 }
 
 void GhostSystem::recieve(const Message& msg) {
@@ -114,6 +118,23 @@ void GhostSystem::recieve(const Message& msg) {
     else if (msg.id == _m_PACMAN_GHOST_COLLISION || msg.id == _m_NEW_GAME) {
         for (auto e : ghosts) {
             _mngr->setAlive(e, false);
+        }
+    }
+    else if (msg.id == _m_STOP_START) {
+        auto pm = _mngr->getHandler(ecs::hdlr::PACMAN);
+        auto pTR = _mngr->getComponent<Transform>(pm);
+
+        for (auto e : ghosts) {
+            auto eTR = _mngr->getComponent<Transform>(e);
+
+            if ((pTR->_pos - eTR->_pos).magnitude() < 100.0f) {
+                _mngr->getComponent<Stopable>(e)->_stoped = true;
+            }
+        }
+    }
+    else if (msg.id == _m_STOP_END) {
+        for (auto e : ghosts) {
+            _mngr->getComponent<Stopable>(e)->_stoped = false;
         }
     }
 }

@@ -7,19 +7,17 @@
 
 struct Transform;
 
-class GhostSystem : public ecs::System {
+class StopSystem : public ecs::System {
 public:
 
-	GhostSystem();
-	virtual ~GhostSystem();
+	StopSystem();
+	virtual ~StopSystem();
 	void initSystem() override;
 	void update() override;
-	void recieve(const Message& msg) override;
-	void spawnGhost();
-
 private:
-	int _maxGhost;
-	float _spawnTimer, _spawnInterval;
+
+	float _stopTimer, _stopInterval, _stopDuration;
+	bool _active;
 
 	Uint32 _lastTick;
 };
