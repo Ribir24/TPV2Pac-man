@@ -12,6 +12,7 @@
 #include "../../systems/FoodSystem.h"
 #include "../../systems/ImmunitySystem.h"
 #include "../../systems/RenderSystem.h"
+#include "../../systems/FullSystem.h"
 
 RunningState::
 RunningState() {}
@@ -34,6 +35,7 @@ RunningState::update() {
         mngr->getSystem<GhostSystem>()->update();
         mngr->getSystem<FoodSystem>()->update();
         mngr->getSystem<ImmunitySystem>()->update();
+        mngr->getSystem<FullSystem>()->update();
 
         mngr->getSystem<RenderSystem>()->update();
 

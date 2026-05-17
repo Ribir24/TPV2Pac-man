@@ -23,4 +23,5 @@ private:
 	Uint32 _lastTick;
 
 	bool _inm;
+	bool _full;
 };

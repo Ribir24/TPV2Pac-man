@@ -14,7 +14,8 @@ GhostSystem::GhostSystem() :
     _spawnInterval(5000.0f),
     _maxGhost(10),
     _lastTick(sdlutils().virtualTimer().currTime()),
-    _inm(false){
+    _inm(false),
+    _full(false){
 }
 
 GhostSystem::~GhostSystem() {
@@ -48,7 +49,7 @@ GhostSystem::update() {
         if (_mngr->isAlive(e)) {
             auto posF = _mngr->getComponent<Transform>(e);
 
-            if ((rand() % 200) == 0) { // 0.005 probabilidad
+            if ((rand() % 200) == 0 || _full) { // 0.005 probabilidad
                 Vector2D dir = (posPM - posF->_pos).normalize();
                 posF->_vel = dir * 1.1f;
             }
@@ -137,5 +138,11 @@ void GhostSystem::recieve(const Message& msg) {
         for (auto e : ghosts) {
             _mngr->setAlive(e, false);
         }
+    }
+    else if (msg.id == _m_FULL_START) {
+        _full = true;
+    }
+    else if (msg.id == _m_FULL_END) {
+        _full = false;
     }
 }

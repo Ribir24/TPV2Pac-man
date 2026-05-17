@@ -40,6 +40,7 @@ class CollisionsSystem;
 class GhostSystem;
 class FoodSystem;
 class ImmunitySystem;
+class FullSystem;
 
 #define _SYS_LIST_ \
 	RenderSystem, \
@@ -47,4 +48,5 @@ class ImmunitySystem;
 	CollisionsSystem, \
     GhostSystem, \
     FoodSystem, \
-    ImmunitySystem
+    ImmunitySystem, \
+    FullSystem

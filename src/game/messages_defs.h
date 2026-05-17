@@ -8,7 +8,7 @@ using msgId_type = uint8_t;
 enum msgId : msgId_type {
 	_m_NEW_GAME, _m_ROUND_START, _m_ROUND_OVER, _m_GAME_OVER,
 	_m_PACMAN_FOOD_COLLISION , _m_PACMAN_MIRACLE_FOOD_COLLISION, _m_PACMAN_GHOST_COLLISION,
-	_m_IMMUNITY_START, _m_IMMUNITY_END
+	_m_IMMUNITY_START, _m_IMMUNITY_END, _m_FULL_START, _m_FULL_END
 };
 
 struct Message {
