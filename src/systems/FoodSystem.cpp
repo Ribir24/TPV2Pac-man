@@ -5,6 +5,7 @@
 #include "../ecs/EntityManager.h"
 #include "../components/Transform.h"
 #include "../components/FramedImage.h"
+#include "../components/Type.h"
 #include "../components/Miracle.h"
 #include "../sdlutils/SDLUtils.h"
 #include "../utils/Vector2D.h"
@@ -34,6 +35,17 @@ FoodSystem::initSystem() {
 
             foodTr->init(pos, Vector2D(1.0f, 1.0f), size, size, 0.0f);
 
+            auto typ = _mngr->addComponent<Type>(e);
+            if (i < 2) {
+                typ->_type = 0;
+            }
+            else if (i < 4) {
+                typ->_type = 1;
+            }
+            else {
+                typ->_type = 2;
+            }
+
             //sprite
             auto fi = _mngr->addComponent<FramedImage>(e, &sdlutils().images().at("sprites"));
 
@@ -43,7 +55,9 @@ FoodSystem::initSystem() {
             fi->_fFrameHeight = sdlutils().images().at("sprites").height() / 8;
 
             //ANIMACION
-            fi->_animationFrames = { 12 };
+            if      (typ->_type == 0) fi->_animationFrames = { 12 };
+            else if (typ->_type == 1) fi->_animationFrames = { 15 };
+            else if (typ->_type == 2) fi->_animationFrames = { 14 };
             fi->_iCurrentFrame = 0;
             fi->_iAnimSpeed = 100;
             fi->_fLastFrameUpdate = 0;
@@ -84,7 +98,10 @@ FoodSystem::update() {
                 // VOLVER A NORMAL
                 mir->_active = false;
                 mir->_lastTime = now;           // reinicia el contador para el estado normal
-                img->_animationFrames = { 12 };
+                auto typ = _mngr->getComponent<Type>(e);
+                if      (typ->_type == 0) img->_animationFrames = { 12 };
+                else if (typ->_type == 1) img->_animationFrames = { 15 };
+                else if (typ->_type == 2) img->_animationFrames = { 14 };
             }
         }
     }

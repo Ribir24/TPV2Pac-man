@@ -5,12 +5,16 @@
 #include "../components/Transform.h"
 #include "../components/Miracle.h"
 #include "../components/Immunity.h"
+#include "../components/Type.h"
 #include "../components/Health.h"
 #include "../ecs/EntityManager.h"
 #include "../utils/Collisions.h"
 #include "../sdlutils/SDLUtils.h"
 
-CollisionsSystem::CollisionsSystem() {
+CollisionsSystem::CollisionsSystem() :
+	_lastType(-1),
+	_full(false)
+{
 	// TODO Auto-generated constructor stub
 
 }
@@ -36,31 +40,45 @@ void CollisionsSystem::update() {
 	
 	auto &food = _mngr->getEntities(ecs::grp::FOOD);
 	auto n = food.size();
-	for (auto i = 0u; i < n; i++) {
-		auto e = food[i];
-		if (_mngr->isAlive(e)) { // if the food is active (it might have died in this frame) 
-			// the Food's Transform
-			//
-			auto eTR = _mngr->getComponent<Transform>(e);
+	if (!_full) {
+		for (auto i = 0u; i < n; i++) {
+			auto e = food[i];
+			if (_mngr->isAlive(e)) { // if the food is active (it might have died in this frame) 
+				// the Food's Transform
+				//
+				auto eTR = _mngr->getComponent<Transform>(e);
 
-			// check if PacMan collides with the food (i.e., eat it)
-			if (Collisions::collides(
+				// check if PacMan collides with the food (i.e., eat it)
+				if (Collisions::collides(
 					pTR->_pos, pTR->_width, pTR->_height,
 					eTR->_pos, eTR->_width, eTR->_height)) {
-				auto immu = _mngr->getComponent<Miracle>(e);
-				if (immu != nullptr && immu->_active) {
+					auto immu = _mngr->getComponent<Miracle>(e);
+					if (immu != nullptr && immu->_active) {
+						Message m;
+						m.id = _m_PACMAN_MIRACLE_FOOD_COLLISION;
+						_mngr->send(m);
+					}
+					auto typeCmp = _mngr->getComponent<Type>(e);
+					if (typeCmp->_type == _lastType) {
+						Message m;
+						m.id = _m_FULL_START;
+						_mngr->send(m);
+						_full = true;
+						_lastType = -1;
+					}
+					else {
+						_lastType = typeCmp->_type;
+					}
+					_mngr->setAlive(e, false);
+					sdlutils().soundEffects().at("pacman_eat").play();
 					Message m;
-					m.id = _m_PACMAN_MIRACLE_FOOD_COLLISION;
+					m.id = _m_PACMAN_FOOD_COLLISION;
 					_mngr->send(m);
 				}
-				_mngr->setAlive(e, false);
-				sdlutils().soundEffects().at("pacman_eat").play();
-				Message m;
-				m.id = _m_PACMAN_FOOD_COLLISION;
-				_mngr->send(m);
 			}
 		}
 	}
+	
 
 	auto& ghosts = _mngr->getEntities(ecs::grp::GHOSTS);
 	auto nG = ghosts.size();
@@ -82,8 +100,10 @@ void CollisionsSystem::update() {
 
 				bool imm = immComp->_active;
 				if (imm) {
-					_mngr->setAlive(e, false);
-					sdlutils().soundEffects().at("pacman_chomp").play();
+					if (!_full) {
+						_mngr->setAlive(e, false);
+						sdlutils().soundEffects().at("pacman_chomp").play();
+					}
 				}
 				else{
 					Message m;
@@ -93,5 +113,15 @@ void CollisionsSystem::update() {
 				}
 			}
 		}
+	}
+}
+
+void CollisionsSystem::recieve(const Message& msg) {
+	if (msg.id == _m_FULL_END) {
+		_full = false;
+	}
+	else if (msg.id == _m_ROUND_START) {
+		_full = false;
+		_lastType = -1;
 	}
 }

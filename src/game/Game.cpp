@@ -9,6 +9,7 @@
 #include "../systems/RenderSystem.h"
 #include "../systems/GhostSystem.h"
 #include "../systems/FoodSystem.h"
+#include "../systems/FullSystem.h"
 #include "../systems/ImmunitySystem.h"
 #include "../utils/Vector2D.h"
 #include "../utils/Collisions.h"
@@ -67,6 +68,7 @@ bool Game::init() {
 	_ghostSys = _mngr->addSystem<GhostSystem>();
 	_foodSys = _mngr->addSystem<FoodSystem>();
 	_immSys = _mngr->addSystem<ImmunitySystem>();
+	_fullSys = _mngr->addSystem<FullSystem>();
 
 	return true;
 }

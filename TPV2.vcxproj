@@ -22,6 +22,7 @@
     <ClCompile Include="src\ecs\EntityManager.cpp" />
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="src\game\GameStates\GameOverState.cpp" />
+    <ClCompile Include="src\systems\FullSystem.cpp" />
     <ClCompile Include="src\game\GameStates\NewGameState.cpp" />
     <ClCompile Include="src\game\GameStates\NewRoundState.cpp" />
     <ClCompile Include="src\game\GameStates\PausedState.cpp" />
@@ -56,6 +57,7 @@
     <ClInclude Include="src\ecs\ecs_defs_example.h" />
     <ClInclude Include="src\ecs\Entity.h" />
     <ClInclude Include="src\ecs\EntityManager.h" />
+    <ClInclude Include="src\components\Type.h" />
     <ClInclude Include="src\ecs\messages.h" />
     <ClInclude Include="src\ecs\messages_defs_example.h" />
     <ClInclude Include="src\ecs\System.h" />
@@ -63,6 +65,7 @@
     <ClInclude Include="src\game\Game.h" />
     <ClInclude Include="src\game\GameStates\GameOverState.h" />
     <ClInclude Include="src\game\GameStates\GameState.h" />
+    <ClInclude Include="src\systems\FullSystem.h" />
     <ClInclude Include="src\game\GameStates\NewGameState.h" />
     <ClInclude Include="src\game\GameStates\NewRoundState.h" />
     <ClInclude Include="src\game\GameStates\PausedState.h" />

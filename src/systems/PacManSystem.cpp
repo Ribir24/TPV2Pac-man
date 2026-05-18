@@ -14,7 +14,7 @@
 
 PacManSystem::PacManSystem() :
 		_pmTR(nullptr),
-		_speed(2.5f) {
+		_speed(3.0f) {
 }
 
 PacManSystem::~PacManSystem() {
@@ -40,9 +40,9 @@ void PacManSystem::initSystem() {
 	fi->_fFrameHeight = sdlutils().images().at("sprites").height() / 8;
 
 	//ANIMACION
-	fi->_animationFrames = { 0, 1 };
+	fi->_animationFrames = { 0, 1, 2, 3, 2, 1 };
 	fi->_iCurrentFrame = 0;
-	fi->_iAnimSpeed = 100;
+	fi->_iAnimSpeed = 30;
 	fi->_fLastFrameUpdate = 0;
 
 	_mngr->addComponent<Immunity>(pacman);
@@ -113,5 +113,21 @@ void PacManSystem::recieve(const Message& msg) {
 
 		auto pacman = _mngr->getHandler(ecs::hdlr::PACMAN);
 		_mngr->getComponent<Immunity>(pacman)->_active = false;
+	}
+	else if (msg.id == _m_FULL_START) {
+		auto pacman = _mngr->getHandler(ecs::hdlr::PACMAN);
+
+		auto fi = _mngr->getComponent<FramedImage>(pacman);
+
+		fi->_animationFrames = { 16, 17, 18, 19, 18, 17 };
+		_speed = 1.0f;
+	}
+	else if (msg.id == _m_FULL_END) {
+		auto pacman = _mngr->getHandler(ecs::hdlr::PACMAN);
+
+		auto fi = _mngr->getComponent<FramedImage>(pacman);
+
+		fi->_animationFrames = { 0, 1, 2, 3, 2, 1 };
+		_speed = 3.0f;
 	}
 }
