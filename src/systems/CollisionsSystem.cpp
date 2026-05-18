@@ -108,7 +108,8 @@ void CollisionsSystem::update() {
 				else{
 					Message m;
 					m.id = _m_PACMAN_GHOST_COLLISION;
-					_mngr->send(m);
+					_mngr->send(m); 
+
 					sdlutils().soundEffects().at("pacman_death").play();
 				}
 			}

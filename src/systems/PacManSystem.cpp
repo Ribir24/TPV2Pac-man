@@ -113,6 +113,11 @@ void PacManSystem::recieve(const Message& msg) {
 
 		auto pacman = _mngr->getHandler(ecs::hdlr::PACMAN);
 		_mngr->getComponent<Immunity>(pacman)->_active = false;
+
+		auto fi = _mngr->getComponent<FramedImage>(pacman);
+
+		fi->_animationFrames = { 0, 1, 2, 3, 2, 1 };
+		_speed = 3.0f;
 	}
 	else if (msg.id == _m_FULL_START) {
 		auto pacman = _mngr->getHandler(ecs::hdlr::PACMAN);

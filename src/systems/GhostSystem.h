@@ -17,6 +17,8 @@ public:
 	void recieve(const Message& msg) override;
 private:
 	void spawnGhost();
+	void cloneGhost(ecs::entity_t ghost);
+
 	int _maxGhost;
 	float _spawnTimer, _spawnInterval;
 

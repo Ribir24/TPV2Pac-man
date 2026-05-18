@@ -16,7 +16,6 @@ public:
 	void update() override;
 	void recieve(const Message& msg) override;
 private:
-	int _maxFruit;
 	float _timer, _interval;
 
 	bool _active;

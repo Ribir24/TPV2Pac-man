@@ -4,6 +4,8 @@
 #include "../components/Transform.h"
 #include "../components/FramedImage.h"
 #include "../components/Immunity.h"
+#include "../components/Clonable.h"
+#include "../components/Clone.h"
 #include "../sdlutils/SDLUtils.h"
 #include "../utils/Vector2D.h"
 
@@ -46,14 +48,44 @@ GhostSystem::update() {
         if (_mngr->isAlive(e)) {
             auto posF = _mngr->getComponent<Transform>(e);
 
-            if ((rand() % 200) == 0) { // 0.005 probabilidad
+            if ((rand() % 200) == 0 && !_mngr->hasComponent<Clone>(e)) { // 0.005 probabilidad
                 Vector2D dir = (posPM - posF->_pos).normalize();
                 posF->_vel = dir * 1.1f;
+            }
+            else if (_mngr->hasComponent<Clone>(e)) {
+                auto clCmp = _mngr->getComponent<Clone>(e);
+
+                bool originalIs = false;
+                size_t i = 0;
+                while (i < ghosts.size() && !originalIs) {
+                    if (ghosts[i] == clCmp->_original && _mngr->isAlive(ghosts[i])) {
+                        originalIs = true;
+                    }
+                    i++;
+                }
+
+                if (originalIs) {
+                    auto oTr = _mngr->getComponent<Transform>(clCmp->_original);
+                    posF->_vel = oTr->_vel;
+                    clCmp->_speed = oTr->_vel;
+                }
+                else {
+                    _mngr->removeComponent<Clone>(e);
+                }
             }
             posF->_pos = posF->_pos + posF->_vel;
 
             if (posF->_pos.getX() < 0 || posF->_pos.getX() + posF->_width > sdlutils().width())   posF->_vel.setX(-posF->_vel.getX());
             if (posF->_pos.getY() < 0 || posF->_pos.getY() + posF->_height > sdlutils().height()) posF->_vel.setY(-posF->_vel.getY());
+
+            if (_mngr->hasComponent<Clonable>(e)) {
+                auto clCmp = _mngr->getComponent<Clonable>(e);
+                clCmp->_N -= dt;
+                if (clCmp->_N <= 0) {
+                    cloneGhost(e);
+                    _mngr->removeComponent<Clonable>(e);
+                }
+            }
         }
     }
 }
@@ -88,6 +120,39 @@ GhostSystem::spawnGhost() {
     fi->_iCurrentFrame = 0;
     fi->_iAnimSpeed = 100;
     fi->_fLastFrameUpdate = 0;
+
+    auto clCmp = _mngr->addComponent<Clonable>(e);
+    clCmp->_N = 10000 + rand() % 10000;
+}
+
+void
+GhostSystem::cloneGhost(ecs::entity_t ghost) {
+    auto e = _mngr->addEntity(ecs::grp::GHOSTS);
+    auto eTr = _mngr->addComponent<Transform>(e);
+    float size = 30.0f;
+
+    auto gTr = _mngr->getComponent<Transform>(ghost);
+    Vector2D pos = (gTr->_pos) + ((Vector2D(sdlutils().width()/2, sdlutils().height()/2) - gTr->_pos).normalize() * 50.0f);
+
+    eTr->init(pos, Vector2D(1.0f, 1.0f), size, size, 0.0f);
+
+    //SPRITESHEET
+    auto fi = _mngr->addComponent<FramedImage>(e, &sdlutils().images().at("sprites"));
+
+    fi->_iCols = 8;
+    fi->iRows = 8;
+    fi->_fFrameWidth = sdlutils().images().at("sprites").width() / 8;
+    fi->_fFrameHeight = sdlutils().images().at("sprites").height() / 8;
+
+    //ANIMACION
+    fi->_animationFrames = { 40, 41, 42, 43, 44, 45, 46, 47 };
+    fi->_iCurrentFrame = 0;
+    fi->_iAnimSpeed = 100;
+    fi->_fLastFrameUpdate = 0;
+
+    auto clCmp = _mngr->addComponent<Clone>(e);
+    clCmp->_original = ghost;
+    clCmp->_speed = Vector2D(1, 1);
 }
 
 void GhostSystem::recieve(const Message& msg) {

@@ -11,6 +11,8 @@ struct Miracle;
 struct Immunity;
 struct Health;
 struct Type;
+struct Clonable;
+struct Clone;
 
 #define _CMPS_LIST_ \
 	Transform, \
@@ -19,7 +21,9 @@ struct Type;
     Miracle, \
     Immunity, \
     Health, \
-    Type
+    Type, \
+    Clonable, \
+    Clone
 
 // Groups list - must have at least one element
 //

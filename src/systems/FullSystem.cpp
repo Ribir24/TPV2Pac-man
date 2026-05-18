@@ -10,8 +10,7 @@
 
 FullSystem::FullSystem() :
     _timer(0.0f),
-    _interval(5000.0f),
-    _maxFruit(2),
+    _interval(3000.0f),
     _active(false),
     _lastTick(sdlutils().virtualTimer().currTime()) {
 }
