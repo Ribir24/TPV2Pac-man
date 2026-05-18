@@ -67,10 +67,6 @@ GhostSystem::update() {
                 if (originalIs) {
                     auto oTr = _mngr->getComponent<Transform>(clCmp->_original);
                     posF->_vel = oTr->_vel;
-                    clCmp->_speed = oTr->_vel;
-                }
-                else {
-                    _mngr->removeComponent<Clone>(e);
                 }
             }
             posF->_pos = posF->_pos + posF->_vel;
@@ -152,7 +148,6 @@ GhostSystem::cloneGhost(ecs::entity_t ghost) {
 
     auto clCmp = _mngr->addComponent<Clone>(e);
     clCmp->_original = ghost;
-    clCmp->_speed = Vector2D(1, 1);
 }
 
 void GhostSystem::recieve(const Message& msg) {
@@ -171,7 +166,8 @@ void GhostSystem::recieve(const Message& msg) {
         for (auto e : ghosts) {
             if (_mngr->isAlive(e) && _mngr->hasComponent<FramedImage>(e)) {
                 auto img = _mngr->getComponent<FramedImage>(e);
-                img->_animationFrames = { 32, 33, 34, 35, 36, 37, 38, 39 };
+                if (!_mngr->hasComponent<Clone>(e)) img->_animationFrames = { 32, 33, 34, 35, 36, 37, 38, 39 };
+                else                                img->_animationFrames = { 40, 41, 42, 43, 44, 45, 46, 47 };
                 img->_iCurrentFrame = 0;
             }
         }

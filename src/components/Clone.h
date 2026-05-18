@@ -12,6 +12,5 @@ struct Clone : public ecs::Component {
 	~Clone() {}
 	
 	ecs::entity_t _original;
-	Vector2D _speed;
 };
 
